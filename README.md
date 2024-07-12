@@ -58,6 +58,8 @@
 
 ## 6. Runtime View
 
+![Runtime-View](./docs/images/06-Runtime-View.png)
+
 ### 6.1 Runtime Scenarios
 - **Password Storage**:
     1. User submits password.
