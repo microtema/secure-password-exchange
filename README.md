@@ -19,6 +19,8 @@
 
 ## 3. Context and Scope
 
+![Context-And-Scope-View](./docs/images/04-Context-And-Scope-View.png)
+
 ### 3.1 Business Context
 - **Customer**: Company requiring secure password exchange among employees.
 - **Stakeholders**: IT department, Security team, End-users.
@@ -41,19 +43,17 @@
 
 ## 5. Building Block View
 
+![Building-Block-View](./docs/images/05-Building-Block-View.png)
+
 ### 5.1 Whitebox Overall System
 - **System Context**: The system is deployed within a VPC, with restricted access through API Gateway.
 - **Key Components**:
-    - **EKS Cluster**: Manages the Docker containers.
-    - **Secrets Manager**: Stores encryption keys.
-    - **S3**: Stores encrypted data.
+    - **DynamoDB**: Stores encrypted data.
     - **Lambda**: Executes serverless functions.
     - **CloudWatch**: Monitors and logs activities.
 
 ### 5.2 Level 2: Container Diagram
-- **EKS**: Hosts application containers.
-- **Secrets Manager**: Provides secure access to secrets.
-- **S3**: Stores encrypted files.
+- **DynamoDB**: Stores encrypted files.
 - **API Gateway**: Controls access to the application.
 
 ## 6. Runtime View
@@ -61,16 +61,25 @@
 ![Runtime-View](./docs/images/06-Runtime-View.png)
 
 ### 6.1 Runtime Scenarios
-- **Password Storage**:
+* **Password Storage**:
     1. User submits password.
     2. API Gateway forwards request to the application.
-    3. Application encrypts password and stores it in S3.
-    4. Encryption keys are fetched from Secrets Manager.
-- **Password Retrieval**:
+    3. Application encrypts password and stores it in Database.
+* **Password Retrieval**:
     1. User requests a password.
     2. API Gateway forwards request to the application.
-    3. Application fetches and decrypts the password from S3.
-    4. Decryption keys are fetched from Secrets Manager.
+    3. Application fetches and decrypts the password from Database.
+* **Password Delete**
+    1. EventBridge publish a PasswordExpiredEvent.
+    2. Application listen to PasswordExpiredEvent and delete the password from database.
+* **Password Insert**
+  1. Database fire Insert event
+  2. Application listen to InsertEvent and check the storage event.
+  3. If storage event is **Time based** then schedule a PasswordExpiredJob via EventBridge
+* **Password Read**
+  1. Database fire Read event
+  2. Application listen to ReadEvent and check the storage event.
+  3. If storage event is **Once** then fire a PasswordExpiredEvent via EventBridge
 
 ## 8. Cross-cutting Concepts
 
@@ -97,9 +106,9 @@
 - **Data Protection**: Adheres to GDPR requirements.
 
 ## 9. Design Decisions
-- **Use AWS EKS**: For container orchestration.
-- **Use AWS Secrets Manager**: For secure management of encryption keys.
-- **Use S3**: For scalable and secure storage of encrypted data.
+- **Use AWS Lambdas**: For cloud computing.
+- **Use DynamoDB**: For scalable and secure storage of encrypted data.
+- **Use EventBridge**: For scheduling and fire events.
 
 ## 10. Quality Requirements
 
@@ -124,9 +133,7 @@
 |-------|----------------------------------------| 
 | AWS   | Amazon Web Services                    |
 | VPC   | Virtual Private Cloud                  |
-| EKS   | Elastic Kubernetes Service             |
 | IAM   | Identity and Access Management         |
-| S3    | Simple Storage Service                 |
 | GDPR  | Global Data Protection Regulatory      |
 
 
