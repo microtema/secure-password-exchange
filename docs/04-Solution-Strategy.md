@@ -6,6 +6,5 @@
 
 ### 4.2 Key Decisions
 - **Cloud Provider**: AWS.
-- **Containerization**: Docker.
-- **Orchestration**: EKS.
+- **EventBridge**: AWS serverless event bus service.
 - **Secrets Management**: AWS Secrets Manager.
