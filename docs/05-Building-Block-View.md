@@ -62,7 +62,7 @@ The system is designed to provide a secure method for exchanging passwords among
 **Detailed Interaction and Processes:**
 1. **User Interaction**:
   - User accesses the web application via a browser. The content is served from an S3 bucket.
-  - User actions (store, read, delete passwords) trigger API calls via the API Gateway.
+  - User actions (store, read passwords) trigger API calls via the API Gateway.
 
 2. **API Gateway**:
   - Receives user requests and routes them to the appropriate Lambda function.
@@ -92,4 +92,5 @@ The system is designed to provide a secure method for exchanging passwords among
 
 ![Building-Block-View](./images/05-Building-Block-View.png)
 
-This diagram illustrates the serverless architecture of the secure password exchange application, highlighting the interaction between users, API Gateway, Lambda functions, and other AWS services. It showcases how each component fits into the overall system to ensure security, scalability, and maintainability.
+This diagram illustrates the serverless architecture of the secure password exchange application, highlighting the interaction between users, API Gateway, Lambda functions, and other AWS services. 
+It showcases how each component fits into the overall system to ensure security, scalability, and maintainability.

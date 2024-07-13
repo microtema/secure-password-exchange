@@ -1,0 +1,117 @@
+openapi: 3.0.1
+info:
+  title: Secure Password Exchange API
+  description: API for managing secure password exchange
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+
+paths:
+  /password:
+    post:
+      summary: Store a new password
+      operationId: storePassword
+      requestBody:
+        description: Password data to store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestData'
+      responses:
+        '200':
+          description: Password stored successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseData'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseData'
+      tags:
+        - Password
+
+    get:
+      summary: Retrieve a stored password
+      operationId: getPassword
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: ID of the password to retrieve
+          schema:
+            $ref: '#/components/schemas/ResponseData'
+      responses:
+        '200':
+          description: Password retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseData'
+        '404':
+          description: Password not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseData'
+      tags:
+        - Password
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    RequestData:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Password"
+        expiration:
+          type: number
+          example: 3600
+        onTime:
+          type: boolean
+          example: true
+      required:
+        - message
+        - expiration
+    ResponseData:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "uuid"
+      required:
+        - message
+    ErrorResponseData:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "error message"
+      required:
+        - message
+
+security:
+  - apiKeyAuth: []
