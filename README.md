@@ -482,111 +482,218 @@ Cross-cutting concepts represent the overall concerns and common aspects that in
 
 The design decisions documented here outline the key choices made during the design and implementation of the secure password exchange application, based on the Building Block View.
 
-### 9.1 Use of AWS Serverless Architecture
+### AWS Serverless Architecture
 
-**Decision**: Adopt AWS serverless services for the core application components.
+**Date:** 2024-07-11
 
-**Reason**: Serverless architecture offers automatic scaling, reduced operational overhead, and cost efficiency by aligning costs with actual usage.
+#### Status
 
-**Implications**:
-- No need to manage server infrastructure.
-- Potential cold start latency for AWS Lambda functions.
-- Pay-per-use pricing model.
+Accepted
 
-### 9.2 Isolated Network Environment
+#### Context
 
-**Decision**: Deploy the application within an AWS Virtual Private Cloud (VPC).
+The application needs to be scalable, cost-efficient, and minimize operational overhead. Serverless architecture is known for its automatic scaling and pay-per-use model, which aligns with these requirements.
 
-**Reason**: Ensures the application is only accessible within the customer’s private network, enhancing security.
+#### Decision
 
-**Implications**:
-- Additional configuration required for VPC, subnets, and security groups.
-- Control over network traffic and resource access within the VPC.
+Adopt AWS serverless services, including AWS Lambda for processing, Amazon API Gateway for managing API requests, and Amazon S3 for static content hosting.
 
-### 9.3 User Authentication and Authorization
+#### Consequences
 
-**Decision**: Use Amazon Cognito for managing user authentication and AWS IAM for access control.
+- **Positive:** Automatic scaling, reduced operational overhead, cost efficiency.
+- **Negative:** Potential cold start latency for AWS Lambda functions, dependency on AWS services.
 
-**Reason**: Provides secure and scalable authentication and authorization mechanisms.
+---
 
-**Implications**:
-- Simplified user management and authentication flows.
-- Fine-grained access control using IAM policies.
+### Isolated Network Environment
 
-### 9.4 Data Encryption
+**Date:** 2024-07-11
 
-**Decision**: Implement data encryption at rest and in transit using AWS KMS and HTTPS.
+#### Status
 
-**Reason**: Protect sensitive password data from unauthorized access.
+Accepted
 
-**Implications**:
-- Increased security for stored and transmitted data.
-- Additional configuration for managing encryption keys with AWS KMS.
+#### Context
 
-### 9.5 Event-Driven Processing
+The application must be secure and only accessible within the customer's private network to protect sensitive data.
 
-**Decision**: Use AWS EventBridge for managing event-driven workflows.
+#### Decision
 
-**Reason**: Automates actions based on specific events, such as password expiration.
+Deploy the application within an AWS Virtual Private Cloud (VPC).
 
-**Implications**:
-- Simplified event handling and integration with other AWS services.
-- Potential complexity in managing event rules and targets.
+#### Consequences
 
-### 9.6 Monitoring and Logging
+- **Positive:** Enhanced security, control over network traffic and resource access.
+- **Negative:** Additional configuration and management required for VPC, subnets, and security groups.
 
-**Decision**: Utilize Amazon CloudWatch for monitoring and logging application activities.
+---
+### User Authentication and Authorization
 
-**Reason**: Provides visibility into system operations, aids in troubleshooting, and ensures compliance.
+**Date:** 2024-07-11
 
-**Implications**:
-- Centralized logging and monitoring.
-- Potential additional costs for storing and analyzing logs.
+#### Status
 
-### 9.7 Database Choice
+Accepted
 
-**Decision**: Use Amazon DynamoDB as the NoSQL database for storing encrypted passwords.
+#### Context
 
-**Reason**: DynamoDB offers high availability, scalability, and low latency for handling large amounts of data.
+To ensure secure access to the application, user authentication and authorization mechanisms need to be robust and scalable.
 
-**Implications**:
-- NoSQL data model and query limitations.
-- Cost considerations based on read/write capacity units and storage.
+#### Decision
 
-### 9.8 Static Web Hosting
+Use Amazon Cognito for managing user authentication and AWS IAM for access control.
 
-**Decision**: Host the web interface on Amazon S3 with static website hosting.
+#### Consequences
 
-**Reason**: S3 provides a reliable, scalable, and cost-effective solution for hosting static web content.
+- **Positive:** Simplified user management, scalable authentication and authorization.
+- **Negative:** Requires integration with application logic and additional IAM policy management.
 
-**Implications**:
-- No need for server management for hosting web content.
-- Simplified deployment and scaling of web interface.
 
-### 9.9 API Management
+---
+### Data Encryption
 
-**Decision**: Use Amazon API Gateway to manage API requests to the backend services.
+**Date:** 2024-07-11
 
-**Reason**: Provides a secure and scalable solution for exposing API endpoints and managing API traffic.
+#### Status
 
-**Implications**:
-- Simplified API management and security.
-- Potential cost based on the number of API calls.
+Accepted
 
-### 9.10 IAM Roles and Policies
+#### Context
 
-**Decision**: Implement fine-grained access control using AWS IAM roles and policies.
+Sensitive password data needs to be protected from unauthorized access, both at rest and in transit.
 
-**Reason**: Ensures secure access to AWS resources, following the principle of least privilege.
+#### Decision
 
-**Implications**:
-- Requires careful planning and management of IAM policies.
-- Enhanced security through controlled access permissions.
+Implement data encryption using AWS KMS for managing encryption keys and HTTPS for secure data transmission.
 
-### Conclusion
+#### Consequences
 
-The design decisions outlined above provide a comprehensive overview of the key choices made during the design and implementation of the secure password exchange application. These decisions ensure that the solution is secure, scalable, and maintainable, meeting the customer’s requirements effectively.
+- **Positive:** Increased security for stored and transmitted data.
+- **Negative:** Additional complexity in managing encryption keys and ensuring all data paths are secure.
 
+
+---
+
+### Event-Driven Processing
+
+**Date:** 2024-07-11
+
+#### Status
+
+Accepted
+
+#### Context
+
+The application requires automation of actions based on specific events, such as password expiration.
+
+#### Decision
+
+Use AWS EventBridge for managing event-driven workflows.
+
+#### Consequences
+
+- **Positive:** Simplified event handling and integration with other AWS services.
+- **Negative:** Potential complexity in managing event rules and targets.
+
+--- 
+
+### Monitoring and Logging
+
+**Date:** 2024-07-11
+
+#### Status
+
+Accepted
+
+#### Context
+
+Monitoring and logging are crucial for maintaining visibility into system operations, troubleshooting issues, and ensuring compliance.
+
+#### Decision
+
+Utilize Amazon CloudWatch for monitoring and logging application activities.
+
+#### Consequences
+
+- **Positive:** Centralized logging and monitoring, quick response to issues.
+- **Negative
+
+
+---
+
+### Database Choice
+
+**Date:** 2024-07-11
+
+#### Status
+
+Accepted
+
+#### Context
+
+The application needs a highly available, scalable, and low latency database to store encrypted passwords.
+
+#### Decision
+
+Use Amazon DynamoDB as the NoSQL database for storing encrypted passwords.
+
+#### Consequences
+
+- **Positive:** High availability, scalability, low latency.
+- **Negative:** NoSQL data model and query limitations, cost considerations based on usage.
+
+
+---
+
+### Static Web Hosting
+
+**Date:** 2024-07-11
+
+#### Status
+
+Accepted
+
+#### Context
+
+The web interface for the application needs to be reliably hosted and scalable to handle user interactions.
+
+#### Decision
+
+Host the web interface on Amazon S3 with static website hosting.
+
+#### Consequences
+
+- **Positive:** Reliable, scalable, cost-effective hosting for static web content.
+- **Negative:** Limited to static content; requires other services for dynamic functionality.
+
+
+---
+
+### API Management
+
+**Date:** 2024-07-11
+
+#### Status
+
+Accepted
+
+#### Context
+
+To expose the backend services to the client application, a secure and scalable API management solution is required.
+
+#### Decision
+
+Use Amazon API Gateway to manage API requests to the backend services.
+
+#### Consequences
+
+- **Positive:** Simplified API management, secure and scalable API endpoints.
+- **Negative:** Potential cost based on the number of API calls.
+
+
+---
+
+[IAM Roles and Policies](./docs/09-Architecture-Decisions/IAM-Roles-and-Policies.md)
 
 ## 10. Quality Requirements
 
