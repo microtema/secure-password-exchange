@@ -19,7 +19,7 @@
 
 ## 3. Context and Scope
 
-![Context-And-Scope-View](./docs/images/04-Context-And-Scope-View.png)
+![Context-And-Scope-View](./images/04-Context-And-Scope-View.png)
 
 ### 3.1 Business Context
 - **Customer**: Company requiring secure password exchange among employees.
@@ -208,7 +208,7 @@ The system is designed to provide a secure method for exchanging passwords among
 
 ### Diagram Summary
 
-![Building-Block-View](./docs/images/05-Building-Block-View.png)
+![Building-Block-View](./images/05-Building-Block-View.png)
 
 This diagram illustrates the serverless architecture of the secure password exchange application, highlighting the interaction between users, API Gateway, Lambda functions, and other AWS services. 
 It showcases how each component fits into the overall system to ensure security, scalability, and maintainability.
@@ -216,7 +216,7 @@ It showcases how each component fits into the overall system to ensure security,
 
 ## 6. Runtime View
 
-![Runtime-View](./docs/images/06-Runtime-View.png)
+![Runtime-View](./images/06-Runtime-View.png)
 
 ### 6.1 Runtime Scenarios
 
@@ -356,7 +356,7 @@ The deployment view describes the environment in which the application is deploy
 
 The deployment diagram below illustrates the deployment architecture of the application, highlighting the interaction between various AWS components.
 
-![Deployment View](./docs/images/05-Building-Block-View.png)
+![Deployment View](./images/05-Building-Block-View.png)
 
 ### 7.3 Deployment Steps
 
@@ -693,7 +693,7 @@ Use Amazon API Gateway to manage API requests to the backend services.
 
 ---
 
-[IAM Roles and Policies](./docs/09-Architecture-Decisions/IAM-Roles-and-Policies.md)
+[IAM Roles and Policies](./09-Architecture-Decisions/IAM-Roles-and-Policies.md)
 
 ## 10. Quality Requirements
 

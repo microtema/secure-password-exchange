@@ -1,0 +1,142 @@
+openapi: 3.0.3
+info:
+  title: Secure Password Exchange API
+  description: API for managing secure password exchange
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+
+components:
+  schemas:
+    RequestData:
+      type: object
+      properties:
+        message:
+          type: string
+        expiration:
+          type: number
+        once:
+          type: boolean
+      required:
+        - message
+        - expiration
+    ResponseData:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "uuid"
+      required:
+        - message
+    ErrorResponseData:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "error message"
+      required:
+        - message
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: x-api-key
+      in: header
+    EndpointAuthorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: cognito_user_pools
+      x-amazon-apigateway-authorizer:
+        type: cognito_user_pools
+        providerARNs:
+          - "${cognito_user_pool_arn}"
+
+paths:
+  /password/{id}:
+    get:
+      operationId: Get Password
+      description: Get Password by Key
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Password ID of the existing Password to receive from database
+          schema:
+            type: string
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${get_password_lambda_arn}/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        timeoutInMillis: ${lambda_identity_timeout}
+        type: "aws_proxy"
+        contentHandling: "CONVERT_TO_TEXT"
+      x-amazon-apigateway-auth:
+        type: "NONE"
+      x-amazon-apigateway-api-key-source: "HEADER"
+      responses:
+        '200':
+          description: Password retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseData'
+        '404':
+          description: Password not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseData'
+  /passwords:
+    post:
+      operationId: Create Password
+      description: Create Password
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        description: Create a Password
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestData"
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${create_password_lambda_arn}/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        timeoutInMillis: ${lambda_identity_timeout}
+        type: "aws_proxy"
+        contentHandling: "CONVERT_TO_TEXT"
+      x-amazon-apigateway-auth:
+        type: "NONE"
+      x-amazon-apigateway-api-key-source: "HEADER"
+      responses:
+        '200':
+          description: Password stored successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseData'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseData'
+security:
+  - ApiKeyAuth: [ ]
+  - EndpointAuthorizer: [ ]
